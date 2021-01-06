@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="scandit-cordova-datacapture-text" version="6.6.0"
+<plugin id="scandit-cordova-datacapture-text" version="6.6.1"
     xmlns="http://apache.org/cordova/ns/plugins/1.0">
 
     <name>ScanditTextCapture</name>
@@ -43,12 +43,12 @@
         <source-file src="src/ios/ScanditTextCapture+TextCaptureDeserializerDelegate.swift" />
         <source-file src="src/ios/ScanditTextCapture+TextCaptureListener.swift" />
 
-        <dependency id="scandit-cordova-datacapture-core" version="6.6.0" />
+        <dependency id="scandit-cordova-datacapture-core" version="6.6.1" />
 
         <framework custom="true" embed="true" src="src/ios/framework/ScanditTextCapture.framework"
-            version="6.6.0" />
+            version="6.6.1" />
         <framework custom="true" embed="true" src="src/ios/framework/ScanditOCR.framework"
-            version="6.6.0" />
+            version="6.6.1" />
 
         <hook src="src/hooks/add-frameworks.js" type="before_plugin_install" />
     </platform>
@@ -91,16 +91,16 @@
         <source-file src="src/android/handlers/TextCaptureHandler.kt"
             target-dir="kotlin/com/scandit/datacapture/cordova/text/handlers" />
 
-        <dependency id="scandit-cordova-datacapture-core" version="6.6.0" />
+        <dependency id="scandit-cordova-datacapture-core" version="6.6.1" />
         <dependency id="cordova-plugin-androidx" />
 
         <framework custom="true" src="src/android/build.gradle" type="gradleReference" />
         <framework src="androidx.appcompat:appcompat:1.1.0" />
 
         <resource-file custom="true" src="src/android/library/ScanditTextCapture.aar"
-            target="libs/ScanditTextCapture.aar" version="6.6.0" />
+            target="libs/ScanditTextCapture.aar" version="6.6.1" />
         <resource-file custom="true" src="src/android/library/ScanditTextCaptureBase.aar"
-            target="libs/ScanditTextCaptureBase.aar" version="6.6.0" />
+            target="libs/ScanditTextCaptureBase.aar" version="6.6.1" />
 
         <hook src="src/hooks/add-frameworks.js" type="before_plugin_install" />
         <hook src="src/hooks/support-kotlin.js" type="after_plugin_install" />
