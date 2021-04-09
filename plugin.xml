@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="scandit-cordova-datacapture-text" version="6.6.4"
+<plugin id="scandit-cordova-datacapture-text" version="6.7.2"
     xmlns="http://apache.org/cordova/ns/plugins/1.0">
 
     <name>ScanditTextCapture</name>
@@ -43,14 +43,10 @@
         <source-file src="src/ios/ScanditTextCapture+TextCaptureDeserializerDelegate.swift" />
         <source-file src="src/ios/ScanditTextCapture+TextCaptureListener.swift" />
 
-        <dependency id="scandit-cordova-datacapture-core" version="6.6.4" />
+        <dependency id="scandit-cordova-datacapture-core" version="6.7.2" />
 
-        <framework custom="true" embed="true" src="src/ios/framework/ScanditTextCapture.framework"
-            version="6.6.4" />
-        <framework custom="true" embed="true" src="src/ios/framework/ScanditOCR.framework"
-            version="6.6.4" />
-
-        <hook src="src/hooks/add-frameworks.js" type="before_plugin_install" />
+        <framework src="ScanditTextCapture" spec="= 6.7.2" type="podspec" />
+        <framework src="ScanditOCR" spec="= 6.7.2" type="podspec" />
     </platform>
 
     <!-- Android -->
@@ -91,18 +87,16 @@
         <source-file src="src/android/handlers/TextCaptureHandler.kt"
             target-dir="kotlin/com/scandit/datacapture/cordova/text/handlers" />
 
-        <dependency id="scandit-cordova-datacapture-core" version="6.6.4" />
+        <dependency id="scandit-cordova-datacapture-core" version="6.7.2" />
         <dependency id="cordova-plugin-androidx" />
 
         <framework custom="true" src="src/android/build.gradle" type="gradleReference" />
         <framework src="androidx.appcompat:appcompat:1.1.0" />
 
-        <resource-file custom="true" src="src/android/library/ScanditTextCapture.aar"
-            target="libs/ScanditTextCapture.aar" version="6.6.4" />
-        <resource-file custom="true" src="src/android/library/ScanditTextCaptureBase.aar"
-            target="libs/ScanditTextCaptureBase.aar" version="6.6.4" />
+        <framework src="com.scandit.datacapture:text:6.7.2" />
 
-        <hook src="src/hooks/add-frameworks.js" type="before_plugin_install" />
+        <framework src="com.scandit.datacapture:text:6.7.2" />
+
         <hook src="src/hooks/support-kotlin.js" type="after_plugin_install" />
     </platform>
 

@@ -5,6 +5,4 @@
  */
 
 dependencies {
-    api(name: 'ScanditTextCaptureBase', ext: 'aar')
-    api(name: 'ScanditTextCapture', ext: 'aar')
-}
+      }
