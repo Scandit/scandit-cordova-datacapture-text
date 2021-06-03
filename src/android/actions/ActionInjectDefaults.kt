@@ -30,7 +30,7 @@ class ActionInjectDefaults(
                 textCaptureDefaults = SerializableTextCaptureDefaults(
                     textCaptureOverlayDefaults = SerializableTextCaptureOverlayDefaults(
                         brushDefaults = SerializableBrushDefaults(
-                            TextCaptureOverlay.defaultBrush()
+                            TextCaptureOverlay.DEFAULT_BRUSH
                         )
                     ),
                     textCaptureSettingsDefaults = SerializableTextCaptureSettingsDefaults(

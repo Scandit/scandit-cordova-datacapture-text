@@ -30,7 +30,8 @@ extension ScanditTextCaptureDefaults.TextCaptureDefaultsContainer {
                      _ overlay: TextCaptureOverlay) -> ScanditTextCaptureDefaults.TextCaptureDefaultsContainer {
         let textCaptureOverlay = ScanditTextCaptureDefaults.TextCaptureOverlayDefaults.from(overlay)
         let textCaptureSettings = ScanditTextCaptureDefaults.TextCaptureSettingsDefaults.from(settings)
-        let cameraSettings = ScanditCaptureCoreDefaults.CameraSettingsDefaults.from(TextCapture.recommendedCameraSettings)
+        let cameraSettings = ScanditCaptureCoreDefaults
+            .CameraSettingsDefaults.from(TextCapture.recommendedCameraSettings)
         return ScanditTextCaptureDefaults.TextCaptureDefaultsContainer(TextCaptureOverlay: textCaptureOverlay,
                                                                        TextCaptureSettings: textCaptureSettings,
                                                                        RecommendedCameraSettings: cameraSettings)
