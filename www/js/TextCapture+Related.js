@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextCaptureOverlay = exports.TextCaptureFeedback = exports.TextCaptureSession = void 0;
 /// <amd-module name="scandit-cordova-datacapture-text.TextCapture+Related"/>
 // ^ needed because Cordova can't resolve "../xx" style dependencies
 const CapturedText_1 = require("scandit-cordova-datacapture-text.CapturedText");

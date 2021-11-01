@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextCaptureListenerProxy = void 0;
 const TextCapture_Related_1 = require("scandit-cordova-datacapture-text.TextCapture+Related");
 const Cordova_1 = require("scandit-cordova-datacapture-text.Cordova");
 var TextCaptureListenerEvent;

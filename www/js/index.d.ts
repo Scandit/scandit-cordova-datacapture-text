@@ -9,9 +9,9 @@ interface PrivateCapturedText {
 }
 export class CapturedText {
     private _value;
-    readonly value: string;
+    get value(): string;
     private _location;
-    readonly location: Quadrilateral;
+    get location(): Quadrilateral;
     private static fromJSON;
 }
 
@@ -21,10 +21,12 @@ interface PrivateTextCapture extends PrivateDataCaptureMode {
     didChange: () => Promise<void>;
 }
 export class TextCapture implements DataCaptureMode {
-    isEnabled: boolean;
-    readonly context: DataCaptureContext | null;
-    static readonly recommendedCameraSettings: CameraSettings;
-    feedback: TextCaptureFeedback;
+    get isEnabled(): boolean;
+    set isEnabled(isEnabled: boolean);
+    get context(): DataCaptureContext | null;
+    static get recommendedCameraSettings(): CameraSettings;
+    get feedback(): TextCaptureFeedback;
+    set feedback(feedback: TextCaptureFeedback);
     private type;
     private _isEnabled;
     private _feedback;
@@ -50,9 +52,9 @@ interface PrivateTextCaptureSession {
 }
 export class TextCaptureSession {
     private _newlyCapturedTexts;
-    readonly newlyCapturedTexts: CapturedText[];
+    get newlyCapturedTexts(): CapturedText[];
     private _frameSequenceID;
-    readonly frameSequenceID: number;
+    get frameSequenceID(): number;
     private static fromJSON;
 }
 export interface TextCaptureListener {
@@ -63,7 +65,7 @@ interface PrivateTextCaptureFeedback {
 }
 export class TextCaptureFeedback {
     success: Feedback;
-    static readonly default: TextCaptureFeedback;
+    static get default(): TextCaptureFeedback;
 }
 interface PrivateTextCaptureOverlay {
     toJSON: () => object;
@@ -73,11 +75,14 @@ export class TextCaptureOverlay implements DataCaptureOverlay {
     private textCapture;
     private _shouldShowScanAreaGuides;
     private _viewfinder;
-    static readonly defaultBrush: Brush;
+    static get defaultBrush(): Brush;
     private _brush;
-    brush: Brush;
-    viewfinder: Viewfinder | null;
-    shouldShowScanAreaGuides: boolean;
+    get brush(): Brush;
+    set brush(newBrush: Brush);
+    get viewfinder(): Viewfinder | null;
+    set viewfinder(newViewfinder: Viewfinder | null);
+    get shouldShowScanAreaGuides(): boolean;
+    set shouldShowScanAreaGuides(shouldShow: boolean);
     static withTextCapture(textCapture: TextCapture): TextCaptureOverlay;
     static withTextCaptureForView(textCapture: TextCapture, view: DataCaptureView | null): TextCaptureOverlay;
     private constructor();
