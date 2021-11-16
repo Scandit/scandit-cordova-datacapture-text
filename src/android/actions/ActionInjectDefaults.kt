@@ -24,6 +24,7 @@ class ActionInjectDefaults(
     private val listener: ResultListener
 ) : Action {
 
+    @Suppress("DEPRECATION")
     override fun run(args: JSONArray, callbackContext: CallbackContext) {
         try {
             val defaults = SerializableTextDefaults(
