@@ -14,12 +14,12 @@ import com.scandit.datacapture.core.data.FrameData
 import com.scandit.datacapture.text.capture.TextCapture
 import com.scandit.datacapture.text.capture.TextCaptureListener
 import com.scandit.datacapture.text.capture.TextCaptureSession
-import java.util.concurrent.atomic.AtomicReference
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
 import org.apache.cordova.CallbackContext
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 class TextCaptureCallback(
     private val actionsHandler: ActionsHandler,

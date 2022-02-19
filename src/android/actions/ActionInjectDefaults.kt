@@ -44,7 +44,7 @@ class ActionInjectDefaults(
             )
             listener.onTextDefaults(defaults, callbackContext)
         } catch (e: Exception) {
-            e.printStackTrace()
+            println(e)
             listener.onJsonParseError(e, callbackContext)
         }
     }

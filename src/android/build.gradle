@@ -4,5 +4,17 @@
  * Copyright (C) 2020- Scandit AG. All rights reserved.
  */
 
+def parentFile = project.projectDir.parentFile
+
+repositories {
+    maven { url "file://${parentFile}/../../../../.m2/repository" }
+    mavenLocal()
+    mavenCentral()
+}
+
 dependencies {
-      }
+    def sdk_version = "6.11.0"
+    
+    api "com.scandit.datacapture:text-base:$sdk_version"
+    api "com.scandit.datacapture:text:$sdk_version"
+}

@@ -38,7 +38,8 @@ import org.apache.cordova.CordovaPlugin
 import org.json.JSONArray
 import org.json.JSONObject
 
-class ScanditTextCapture : CordovaPlugin(),
+class ScanditTextCapture :
+    CordovaPlugin(),
     CameraPermissionGrantedListener,
     ModeDeserializersProvider,
     TextActionsListeners,
@@ -87,9 +88,10 @@ class ScanditTextCapture : CordovaPlugin(),
         return try {
             actionsHandler.addAction(action, args, callbackContext)
         } catch (e: InvalidActionNameError) {
+            println(e)
             false
         } catch (e: Exception) {
-            e.printStackTrace()
+            println(e)
             true
         }
     }
@@ -171,7 +173,8 @@ class ScanditTextCapture : CordovaPlugin(),
     //endregion
 }
 
-interface TextActionsListeners : ActionInjectDefaults.ResultListener,
+interface TextActionsListeners :
+    ActionInjectDefaults.ResultListener,
     ActionFinishCallback.ResultListener,
     ActionSubscribeTextCapture.ResultListener,
     ActionSend.ResultListener
