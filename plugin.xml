@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="scandit-cordova-datacapture-text" version="6.14.0"
+<plugin id="scandit-cordova-datacapture-text" version="6.14.1"
     xmlns="http://apache.org/cordova/ns/plugins/1.0">
 
     <name>ScanditTextCapture</name>
@@ -43,10 +43,10 @@
         <source-file src="src/ios/ScanditTextCapture+TextCaptureDeserializerDelegate.swift" />
         <source-file src="src/ios/ScanditTextCapture+TextCaptureListener.swift" />
 
-        <dependency id="scandit-cordova-datacapture-core" version="6.14.0" />
+        <dependency id="scandit-cordova-datacapture-core" version="6.14.1" />
 
-        <framework src="ScanditTextCapture" spec="= 6.14.0" type="podspec" />
-        <framework src="ScanditOCR" spec="= 6.14.0" type="podspec" />
+        <framework src="ScanditTextCapture" spec="= 6.14.1" type="podspec" />
+        <framework src="ScanditOCR" spec="= 6.14.1" type="podspec" />
     </platform>
 
     <!-- Android -->
@@ -87,7 +87,7 @@
         <source-file src="src/android/handlers/TextCaptureHandler.kt"
             target-dir="kotlin/com/scandit/datacapture/cordova/text/handlers" />
 
-        <dependency id="scandit-cordova-datacapture-core" version="6.14.0" />
+        <dependency id="scandit-cordova-datacapture-core" version="6.14.1" />
 
         <framework custom="true" src="src/android/build.gradle" type="gradleReference" />
         <framework src="androidx.appcompat:appcompat:1.1.0" />
