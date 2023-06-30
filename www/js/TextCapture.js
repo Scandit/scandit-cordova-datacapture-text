@@ -84,10 +84,10 @@ class TextCapture extends Serializeable_1.DefaultSerializeable {
     }
 }
 __decorate([
-    Serializeable_1.nameForSerialization('enabled')
+    (0, Serializeable_1.nameForSerialization)('enabled')
 ], TextCapture.prototype, "_isEnabled", void 0);
 __decorate([
-    Serializeable_1.nameForSerialization('feedback')
+    (0, Serializeable_1.nameForSerialization)('feedback')
 ], TextCapture.prototype, "_feedback", void 0);
 __decorate([
     Serializeable_1.ignoreFromSerialization
