@@ -26,23 +26,20 @@ struct TextCaptureCallbackResult: BlockingListenerCallbackResult {
 }
 
 @objc(ScanditTextCapture)
-public class ScanditTextCapture: CDVPlugin, DataCapturePlugin {
+public class ScanditTextCapture: CDVPlugin {
 
-    lazy var modeDeserializers: [DataCaptureModeDeserializer] = {
+    lazy var modeDeserializer: TextCaptureDeserializer = {
         let textCaptureDeserializer = TextCaptureDeserializer()
         textCaptureDeserializer.delegate = self
-        return [textCaptureDeserializer]
+        return textCaptureDeserializer
     }()
-
-    lazy var componentDeserializers: [DataCaptureComponentDeserializer] = []
-    lazy var components: [DataCaptureComponent] = []
 
     lazy var callbacks = TextCaptureCallbacks()
     lazy var callbackLocks = CallbackLocks()
 
     override public func pluginInitialize() {
         super.pluginInitialize()
-        ScanditCaptureCore.dataCapturePlugins.append(self)
+        ScanditCaptureCore.registerModeDeserializer(modeDeserializer)
     }
 
     public override func onReset() {

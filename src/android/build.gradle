@@ -4,7 +4,7 @@
  * Copyright (C) 2020- Scandit AG. All rights reserved.
  */
 
-def sdk_version = "6.18.2"
+def sdk_version = "6.19.0"
 
 if (System.getenv("SDC_FETCH_LIBS_SOURCE") != null) {
     def fetch = System.getenv("SDC_FETCH_LIBS_SOURCE")
@@ -29,6 +29,6 @@ repositories {
 
 dependencies {
     println("Version of the native sdk used in this build: $sdk_version")
-    api "com.scandit.datacapture:text-base:$sdk_version"
+    api "com.scandit.datacapture:text-backend:$sdk_version"
     api "com.scandit.datacapture:text:$sdk_version"
 }
