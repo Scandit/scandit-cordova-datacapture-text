@@ -67,7 +67,6 @@ class ScanditTextCapture :
     override fun onReset() {
         textCaptureHandler.disposeCurrent()
         textCaptureCallback?.dispose()
-        pluginInitialize()
     }
 
     override fun pluginInitialize() {
