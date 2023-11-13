@@ -10,6 +10,7 @@ import android.Manifest
 import com.scandit.datacapture.cordova.core.ScanditCaptureCore
 import com.scandit.datacapture.cordova.core.actions.ActionSend
 import com.scandit.datacapture.cordova.core.communication.CameraPermissionGrantedListener
+import com.scandit.datacapture.cordova.core.communication.ModeDeserializersProvider
 import com.scandit.datacapture.cordova.core.data.SerializableFinishModeCallbackData
 import com.scandit.datacapture.cordova.core.errors.InvalidActionNameError
 import com.scandit.datacapture.cordova.core.errors.JsonParseError
@@ -24,9 +25,9 @@ import com.scandit.datacapture.cordova.text.callbacks.TextCaptureCallback
 import com.scandit.datacapture.cordova.text.data.defaults.SerializableTextDefaults
 import com.scandit.datacapture.cordova.text.factories.TextCaptureActionFactory
 import com.scandit.datacapture.cordova.text.handlers.TextCaptureHandler
+import com.scandit.datacapture.core.capture.serialization.DataCaptureModeDeserializer
 import com.scandit.datacapture.core.data.FrameData
 import com.scandit.datacapture.core.json.JsonValue
-import com.scandit.datacapture.frameworks.core.deserialization.Deserializers
 import com.scandit.datacapture.text.capture.TextCapture
 import com.scandit.datacapture.text.capture.TextCaptureListener
 import com.scandit.datacapture.text.capture.TextCaptureSession
@@ -40,6 +41,7 @@ import org.json.JSONObject
 class ScanditTextCapture :
     CordovaPlugin(),
     CameraPermissionGrantedListener,
+    ModeDeserializersProvider,
     TextActionsListeners,
     TextCaptureDeserializerListener,
     TextCaptureListener {
@@ -72,10 +74,6 @@ class ScanditTextCapture :
     override fun pluginInitialize() {
         super.pluginInitialize()
         ScanditCaptureCore.addPlugin(serviceName)
-        Deserializers.Factory.addModeDeserializer(
-            TextCaptureDeserializer()
-                .also { it.listener = this }
-        )
 
         if (cordova.hasPermission(Manifest.permission.CAMERA)) {
             onCameraPermissionGranted()
@@ -102,6 +100,13 @@ class ScanditTextCapture :
     override fun onCameraPermissionGranted() {
         actionsHandler.onCameraPermissionGranted()
     }
+    //endregion
+
+    //region ModeDeserializersProvider
+    override fun provideModeDeserializers(): List<DataCaptureModeDeserializer> = listOf(
+        TextCaptureDeserializer()
+            .also { it.listener = this }
+    )
     //endregion
 
     //region TextCaptureDeserializerListener
