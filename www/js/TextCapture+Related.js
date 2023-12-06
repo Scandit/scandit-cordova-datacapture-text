@@ -41,6 +41,13 @@ class TextCaptureFeedback extends Serializeable_1.DefaultSerializeable {
 }
 exports.TextCaptureFeedback = TextCaptureFeedback;
 class TextCaptureOverlay extends Serializeable_1.DefaultSerializeable {
+    constructor() {
+        super();
+        this.type = 'textCapture';
+        this._shouldShowScanAreaGuides = false;
+        this._viewfinder = null;
+        this._brush = TextCaptureOverlay.defaultBrush;
+    }
     static get defaultBrush() {
         return new Viewfinder_1.Brush(Cordova_1.Cordova.defaults.TextCapture.TextCaptureOverlay.DefaultBrush.fillColor, Cordova_1.Cordova.defaults.TextCapture.TextCaptureOverlay.DefaultBrush.strokeColor, Cordova_1.Cordova.defaults.TextCapture.TextCaptureOverlay.DefaultBrush.strokeWidth);
     }
@@ -76,25 +83,18 @@ class TextCaptureOverlay extends Serializeable_1.DefaultSerializeable {
         }
         return overlay;
     }
-    constructor() {
-        super();
-        this.type = 'textCapture';
-        this._shouldShowScanAreaGuides = false;
-        this._viewfinder = null;
-        this._brush = TextCaptureOverlay.defaultBrush;
-    }
 }
 __decorate([
     Serializeable_1.ignoreFromSerialization
 ], TextCaptureOverlay.prototype, "textCapture", void 0);
 __decorate([
-    (0, Serializeable_1.nameForSerialization)('shouldShowScanAreaGuides')
+    Serializeable_1.nameForSerialization('shouldShowScanAreaGuides')
 ], TextCaptureOverlay.prototype, "_shouldShowScanAreaGuides", void 0);
 __decorate([
-    (0, Serializeable_1.serializationDefault)(Viewfinder_1.NoViewfinder),
-    (0, Serializeable_1.nameForSerialization)('viewfinder')
+    Serializeable_1.serializationDefault(Viewfinder_1.NoViewfinder),
+    Serializeable_1.nameForSerialization('viewfinder')
 ], TextCaptureOverlay.prototype, "_viewfinder", void 0);
 __decorate([
-    (0, Serializeable_1.nameForSerialization)('brush')
+    Serializeable_1.nameForSerialization('brush')
 ], TextCaptureOverlay.prototype, "_brush", void 0);
 exports.TextCaptureOverlay = TextCaptureOverlay;

@@ -5,7 +5,7 @@ exports.defaultsFromJSON = void 0;
 // ^ needed because Cordova can't resolve "../xx" style dependencies
 const Camera_Related_1 = require("scandit-cordova-datacapture-core.Camera+Related");
 const Common_1 = require("scandit-cordova-datacapture-core.Common");
-const defaultsFromJSON = (json) => {
+exports.defaultsFromJSON = (json) => {
     return {
         TextCapture: {
             TextCaptureOverlay: {
@@ -26,4 +26,3 @@ const defaultsFromJSON = (json) => {
         },
     };
 };
-exports.defaultsFromJSON = defaultsFromJSON;

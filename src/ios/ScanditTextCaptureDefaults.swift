@@ -1,8 +1,10 @@
 import ScanditTextCapture
 
 struct ScanditTextCaptureDefaults: Encodable {
+    typealias CameraSettingsDefaults = ScanditCaptureCoreDefaults.CameraSettingsDefaults
+
     struct TextCaptureOverlayDefaults: Encodable {
-        let defaultBrush: BrushDefaults
+        let defaultBrush: ScanditCaptureCoreDefaults.BrushDefaults
 
         enum CodingKeys: String, CodingKey {
             case defaultBrush = "DefaultBrush"
@@ -42,7 +44,8 @@ extension ScanditTextCaptureDefaults.TextCaptureDefaultsContainer {
                      _ overlay: TextCaptureOverlay) -> ScanditTextCaptureDefaults.TextCaptureDefaultsContainer {
         let textCaptureOverlay = ScanditTextCaptureDefaults.TextCaptureOverlayDefaults.from(overlay)
         let textCaptureSettings = ScanditTextCaptureDefaults.TextCaptureSettingsDefaults.from(settings)
-        let cameraSettings = CameraSettingsDefaults.from(TextCapture.recommendedCameraSettings)
+        let cameraSettings = ScanditCaptureCoreDefaults
+            .CameraSettingsDefaults.from(TextCapture.recommendedCameraSettings)
         return ScanditTextCaptureDefaults.TextCaptureDefaultsContainer(textCaptureOverlay: textCaptureOverlay,
                                                                        textCaptureSettings: textCaptureSettings,
                                                                        recommendedCameraSettings: cameraSettings)
@@ -51,7 +54,7 @@ extension ScanditTextCaptureDefaults.TextCaptureDefaultsContainer {
 
 extension ScanditTextCaptureDefaults.TextCaptureOverlayDefaults {
     static func from(_ overlay: TextCaptureOverlay) -> ScanditTextCaptureDefaults.TextCaptureOverlayDefaults {
-        let brush = BrushDefaults.from(TextCaptureOverlay.defaultBrush)
+        let brush = ScanditCaptureCoreDefaults.BrushDefaults.from(TextCaptureOverlay.defaultBrush)
         return ScanditTextCaptureDefaults.TextCaptureOverlayDefaults(defaultBrush: brush)
     }
 }
