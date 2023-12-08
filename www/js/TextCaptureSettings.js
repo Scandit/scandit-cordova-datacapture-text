@@ -11,12 +11,6 @@ const Cordova_1 = require("scandit-cordova-datacapture-text.Cordova");
 const LocationSelection_1 = require("scandit-cordova-datacapture-core.LocationSelection");
 const Serializeable_1 = require("scandit-cordova-datacapture-core.Serializeable");
 class TextCaptureSettings extends Serializeable_1.DefaultSerializeable {
-    constructor() {
-        super();
-        this.duplicateFilter = Cordova_1.Cordova.defaults.TextCapture.TextCaptureSettings.duplicateFilter;
-        this.locationSelection = null;
-        this.recognitionDirection = Cordova_1.Cordova.defaults.TextCapture.TextCaptureSettings.recognitionDirection;
-    }
     static fromJSON(json) {
         const settings = new TextCaptureSettings();
         Object.keys(json).forEach(key => {
@@ -24,8 +18,14 @@ class TextCaptureSettings extends Serializeable_1.DefaultSerializeable {
         });
         return settings;
     }
+    constructor() {
+        super();
+        this.duplicateFilter = Cordova_1.Cordova.defaults.TextCapture.TextCaptureSettings.duplicateFilter;
+        this.locationSelection = null;
+        this.recognitionDirection = Cordova_1.Cordova.defaults.TextCapture.TextCaptureSettings.recognitionDirection;
+    }
 }
 __decorate([
-    Serializeable_1.serializationDefault(LocationSelection_1.NoneLocationSelection)
+    (0, Serializeable_1.serializationDefault)(LocationSelection_1.NoneLocationSelection)
 ], TextCaptureSettings.prototype, "locationSelection", void 0);
 exports.TextCaptureSettings = TextCaptureSettings;

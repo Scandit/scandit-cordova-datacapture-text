@@ -4,17 +4,33 @@
  * Copyright (C) 2020- Scandit AG. All rights reserved.
  */
 
-def parentFile = project.projectDir.parentFile
+def sdk_version = "6.21.0"
+
+if (System.getenv("SDC_FETCH_LIBS_SOURCE") != null) {
+    def fetch = System.getenv("SDC_FETCH_LIBS_SOURCE")
+
+    if (fetch == "local" && System.getenv("CI_MERGE_REQUEST_ID") != null) {
+        if (sdk_version.contains("SNAPSHOT")) {
+            sdk_version = sdk_version.replace("SNAPSHOT", System.getenv("CI_MERGE_REQUEST_ID") + "-SNAPSHOT")
+        } else if (System.getenv("CI_MERGE_REQUEST_ID") != null) {
+            sdk_version = sdk_version + "-" +  System.getenv("CI_MERGE_REQUEST_ID") + "-SNAPSHOT"
+        }
+    }
+}
+
+def hasInternalReposGradle = file('internal-repos.gradle').exists()
+if (hasInternalReposGradle) {
+    apply from: 'internal-repos.gradle'
+}
 
 repositories {
-    maven { url "file://${parentFile}/../../../../.m2/repository" }
-    mavenLocal()
     mavenCentral()
+    google()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    def sdk_version = "6.17.3"
-    
-    api "com.scandit.datacapture:text-base:$sdk_version"
+    println("Version of the native sdk used in this build: $sdk_version")
+    api "com.scandit.datacapture:text-backend:$sdk_version"
     api "com.scandit.datacapture:text:$sdk_version"
 }
