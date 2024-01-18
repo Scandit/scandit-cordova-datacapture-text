@@ -1,4 +1,4 @@
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="scandit-cordova-datacapture-text" version="6.21.1">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="scandit-cordova-datacapture-text" version="6.20.3">
     <name>ScanditTextCapture</name>
     <js-module name="Cordova" src="www/js/Cordova/Cordova.js" />
     <js-module name="Defaults" src="www/js/Cordova/Defaults.js" />
@@ -31,11 +31,11 @@
         <source-file src="src/ios/ScanditTextCaptureDefaults.swift" />
         <source-file src="src/ios/ScanditTextCapture+TextCaptureDeserializerDelegate.swift" />
         <source-file src="src/ios/ScanditTextCapture+TextCaptureListener.swift" />
-        <dependency id="scandit-cordova-datacapture-core" version="6.21.1" />
+        <dependency id="scandit-cordova-datacapture-core" version="6.20.3" />
         <podspec>
             <pods use-frameworks="true">
-                <pod name="ScanditTextCapture" spec="= 6.21.1" />
-                <pod name="ScanditTXT" spec="= 6.21.1" />
+                <pod name="ScanditTextCapture" spec="= 6.20.3" />
+                <pod name="ScanditTXT" spec="= 6.20.3" />
             </pods>
         </podspec>
     </platform>
@@ -56,7 +56,7 @@
         <source-file src="src/android/data/defaults/SerializableTextDefaults.kt" target-dir="kotlin/com/scandit/datacapture/cordova/text/data/defaults" />
         <source-file src="src/android/factories/TextCaptureActionFactory.kt" target-dir="kotlin/com/scandit/datacapture/cordova/text/factories" />
         <source-file src="src/android/handlers/TextCaptureHandler.kt" target-dir="kotlin/com/scandit/datacapture/cordova/text/handlers" />
-        <dependency id="scandit-cordova-datacapture-core" version="6.21.1" />
+        <dependency id="scandit-cordova-datacapture-core" version="6.20.3" />
         <framework custom="true" src="src/android/build.gradle" type="gradleReference" />
         <framework src="androidx.appcompat:appcompat:1.1.0" />
         <hook src="src/hooks/support-kotlin.js" type="after_plugin_install" />
