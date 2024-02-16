@@ -1,7 +1,5 @@
-/// <amd-module name="scandit-cordova-datacapture-text.Defaults" />
-import { CameraSettings } from 'Camera+Related';
-import { Color, Direction } from 'Common';
-import { CameraSettingsDefaultsJSON } from 'CoreDefaults';
+import { CameraSettings } from 'scandit-datacapture-frameworks-core';
+import { Color, Direction } from 'scandit-datacapture-frameworks-core';
 export interface Defaults {
     TextCapture: {
         TextCaptureOverlay: {
@@ -21,7 +19,7 @@ export interface Defaults {
 export interface DefaultsJSON {
     TextCapture: {
         TextCaptureOverlay: {
-            DefaultBrush: {
+            Brush: {
                 fillColor: string;
                 strokeColor: string;
                 strokeWidth: number;
@@ -31,7 +29,7 @@ export interface DefaultsJSON {
             recognitionDirection: string;
             duplicateFilter: number;
         };
-        RecommendedCameraSettings: CameraSettingsDefaultsJSON;
+        RecommendedCameraSettings: any;
     };
 }
 export declare const defaultsFromJSON: (json: DefaultsJSON) => Defaults;
