@@ -7,28 +7,52 @@
 package com.scandit.datacapture.cordova.text.actions
 
 import com.scandit.datacapture.cordova.core.actions.Action
-import com.scandit.datacapture.cordova.core.errors.JsonParseError
-import com.scandit.datacapture.frameworks.text.TextCaptureModule
+import com.scandit.datacapture.cordova.core.actions.ActionJsonParseErrorResultListener
+import com.scandit.datacapture.cordova.core.data.defaults.SerializableBrushDefaults
+import com.scandit.datacapture.cordova.core.data.defaults.SerializableCameraSettingsDefault
+import com.scandit.datacapture.cordova.text.data.defaults.SerializableTextCaptureDefaults
+import com.scandit.datacapture.cordova.text.data.defaults.SerializableTextCaptureOverlayDefaults
+import com.scandit.datacapture.cordova.text.data.defaults.SerializableTextCaptureSettingsDefaults
+import com.scandit.datacapture.cordova.text.data.defaults.SerializableTextDefaults
+import com.scandit.datacapture.text.capture.TextCapture
+import com.scandit.datacapture.text.capture.TextCaptureSettings
+import com.scandit.datacapture.text.ui.TextCaptureOverlay
 import org.apache.cordova.CallbackContext
 import org.json.JSONArray
-import org.json.JSONObject
 
 class ActionInjectDefaults(
-    private val textCaptureModule: TextCaptureModule
+    private val listener: ResultListener
 ) : Action {
 
     @Suppress("DEPRECATION")
     override fun run(args: JSONArray, callbackContext: CallbackContext) {
         try {
-            val defaults = textCaptureModule.getDefaults()
-            val defaultsJson = JSONObject(
-                mapOf(
-                    "TextCapture" to defaults
+            val defaults = SerializableTextDefaults(
+                textCaptureDefaults = SerializableTextCaptureDefaults(
+                    textCaptureOverlayDefaults = SerializableTextCaptureOverlayDefaults(
+                        brushDefaults = SerializableBrushDefaults(
+                            TextCaptureOverlay.defaultBrush()
+                        )
+                    ),
+                    textCaptureSettingsDefaults = SerializableTextCaptureSettingsDefaults(
+                        TextCaptureSettings.fromJson("{}")
+                    ),
+                    recommendedCameraSettings = SerializableCameraSettingsDefault(
+                        TextCapture.createRecommendedCameraSettings()
+                    )
                 )
             )
-            callbackContext.success(defaultsJson)
+            listener.onTextDefaults(defaults, callbackContext)
         } catch (e: Exception) {
-            JsonParseError(e.message).sendResult(callbackContext)
+            println(e)
+            listener.onJsonParseError(e, callbackContext)
         }
+    }
+
+    interface ResultListener : ActionJsonParseErrorResultListener {
+        fun onTextDefaults(
+            defaults: SerializableTextDefaults,
+            callbackContext: CallbackContext
+        )
     }
 }

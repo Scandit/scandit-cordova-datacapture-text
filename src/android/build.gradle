@@ -4,7 +4,7 @@
  * Copyright (C) 2020- Scandit AG. All rights reserved.
  */
 
-def sdk_version = "6.22.0"
+def sdk_version = "6.21.3"
 
 if (System.getenv("SDC_FETCH_LIBS_SOURCE") != null) {
     def fetch = System.getenv("SDC_FETCH_LIBS_SOURCE")
@@ -31,9 +31,6 @@ repositories {
 
 dependencies {
     println("Version of the native sdk used in this build: $sdk_version")
-    if (findProject(':scandit-datacapture-frameworks-text') != null) {
-        api project(":scandit-datacapture-frameworks-text")
-    } else {
-        api "com.scandit.datacapture.frameworks:text:$sdk_version"
-    }
+    api "com.scandit.datacapture:text-backend:$sdk_version"
+    api "com.scandit.datacapture:text:$sdk_version"
 }

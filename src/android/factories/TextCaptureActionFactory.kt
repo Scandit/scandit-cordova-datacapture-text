@@ -7,21 +7,16 @@
 package com.scandit.datacapture.cordova.text.factories
 
 import com.scandit.datacapture.cordova.core.actions.Action
+import com.scandit.datacapture.cordova.core.actions.ActionSend
 import com.scandit.datacapture.cordova.core.errors.InvalidActionNameError
 import com.scandit.datacapture.cordova.core.factories.ActionFactory
-import com.scandit.datacapture.cordova.core.utils.CordovaEventEmitter
-import com.scandit.datacapture.cordova.text.actions.ActionApplyTextCaptureModeSettings
+import com.scandit.datacapture.cordova.text.TextActionsListeners
 import com.scandit.datacapture.cordova.text.actions.ActionFinishCallback
 import com.scandit.datacapture.cordova.text.actions.ActionInjectDefaults
-import com.scandit.datacapture.cordova.text.actions.ActionSetModeEnabledState
 import com.scandit.datacapture.cordova.text.actions.ActionSubscribeTextCapture
-import com.scandit.datacapture.cordova.text.actions.ActionUpdateTextCaptureMode
-import com.scandit.datacapture.cordova.text.actions.ActionUpdateTextCaptureOverlay
-import com.scandit.datacapture.frameworks.text.TextCaptureModule
 
 class TextCaptureActionFactory(
-    private val textCaptureModule: TextCaptureModule,
-    private val eventEmitter: CordovaEventEmitter
+    private val listener: TextActionsListeners
 ) : ActionFactory {
 
     @Throws(InvalidActionNameError::class)
@@ -30,49 +25,33 @@ class TextCaptureActionFactory(
             INJECT_DEFAULTS -> createActionInjectDefaults()
             SUBSCRIBE_TEXT_CAPTURE -> createActionSubscribeTextCapture()
             FINISH_BLOCKING_ACTION -> createActionFinishBlocking()
-            ACTION_UPDATE_TC_MODE -> createActionUpdateTextCaptureMode()
-            ACTION_APPLY_TC_MODE_SETTINGS -> createActionApplyTextCaptureModeSettings()
-            ACTION_UPDATE_TC_OVERLAY -> createActionUpdateTextCaptureOverlay()
-            ACTION_SET_TC_ENABLED_STATE -> createActionSetModeEnabledState()
+            SEND_TEXT_CAPTURED_EVENT -> createActionTextCaptured()
             else -> throw InvalidActionNameError(actionName)
         }
     }
 
-    override fun canBeRunWithoutCameraPermission(actionName: String): Boolean =
-        actionName !in ACTIONS_REQUIRING_CAMERA
+    override fun canBeRunWithoutCameraPermission(actionName: String): Boolean = true
 
-    private fun createActionInjectDefaults(): Action = ActionInjectDefaults(textCaptureModule)
+    private fun createActionInjectDefaults(): Action = ActionInjectDefaults(listener)
 
-    private fun createActionSubscribeTextCapture() =
-        ActionSubscribeTextCapture(textCaptureModule, eventEmitter)
+    private fun createActionSubscribeTextCapture() = ActionSubscribeTextCapture(listener)
 
-    private fun createActionFinishBlocking() = ActionFinishCallback(textCaptureModule)
+    private fun createActionFinishBlocking() = ActionFinishCallback(listener)
 
-    private fun createActionUpdateTextCaptureMode() = ActionUpdateTextCaptureMode(textCaptureModule)
-
-    private fun createActionUpdateTextCaptureOverlay() =
-        ActionUpdateTextCaptureOverlay(textCaptureModule)
-
-    private fun createActionApplyTextCaptureModeSettings() =
-        ActionApplyTextCaptureModeSettings(textCaptureModule)
-
-    private fun createActionSetModeEnabledState() = ActionSetModeEnabledState(textCaptureModule)
+    private fun createActionTextCaptured() = ActionSend(
+        ACTION_TEXT_CAPTURED,
+        listener,
+        finishCallbackId = ACTION_TEXT_CAPTURED,
+        shouldNotifyWhenFinished = true
+    )
 
     companion object {
         private const val INJECT_DEFAULTS = "getDefaults"
         private const val SUBSCRIBE_TEXT_CAPTURE = "subscribeTextCaptureListener"
         private const val FINISH_BLOCKING_ACTION = "finishCallback"
 
-        private const val ACTION_UPDATE_TC_MODE = "updateTextCaptureMode"
-        private const val ACTION_APPLY_TC_MODE_SETTINGS = "applyTextCaptureModeSettings"
-        private const val ACTION_UPDATE_TC_OVERLAY = "updateTextCaptureOverlay"
-        private const val ACTION_SET_TC_ENABLED_STATE = "setModeEnabledState"
+        const val SEND_TEXT_CAPTURED_EVENT = "sendTextCaptureEvent"
 
-        private val ACTIONS_REQUIRING_CAMERA =
-            setOf(
-                ACTION_APPLY_TC_MODE_SETTINGS,
-                ACTION_UPDATE_TC_MODE,
-                ACTION_UPDATE_TC_OVERLAY
-            )
+        const val ACTION_TEXT_CAPTURED = "didCaptureInTextCapture"
     }
 }

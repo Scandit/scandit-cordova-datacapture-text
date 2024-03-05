@@ -1,4 +1,12 @@
-import ScanditFrameworksText
+import ScanditTextCapture
+
+class TextCaptureCallbacks {
+    var textCaptureListener: Callback?
+
+    func reset() {
+        textCaptureListener = nil
+    }
+}
 
 struct TextCaptureCallbackResult: BlockingListenerCallbackResult {
     struct ResultJSON: Decodable {
@@ -17,38 +25,36 @@ struct TextCaptureCallbackResult: BlockingListenerCallbackResult {
     }
 }
 
-fileprivate extension CordovaEventEmitter {
-    func registerCallback(with event: FrameworksTextCaptureEvent, call: CDVInvokedUrlCommand) {
-        registerCallback(with: event.rawValue, call: call)
-    }
-}
-
 @objc(ScanditTextCapture)
 public class ScanditTextCapture: CDVPlugin {
-    var textModule: TextCaptureModule!
-    var emitter: CordovaEventEmitter!
+
+    lazy var modeDeserializer: TextCaptureDeserializer = {
+        let textCaptureDeserializer = TextCaptureDeserializer()
+        textCaptureDeserializer.delegate = self
+        return textCaptureDeserializer
+    }()
+
+    lazy var callbacks = TextCaptureCallbacks()
+    lazy var callbackLocks = CallbackLocks()
 
     override public func pluginInitialize() {
         super.pluginInitialize()
-        emitter = CordovaEventEmitter(commandDelegate: commandDelegate)
-        textModule = TextCaptureModule(
-            textCaptureListener: FrameworksTextCaptureListener(emitter: emitter)
-        )
-        textModule.didStart()
+        ScanditCaptureCore.registerModeDeserializer(modeDeserializer)
     }
 
-    public override func dispose() {
-        textModule.didStop()
-        emitter.removeCallbacks()
-        super.dispose()
+    public override func onReset() {
+        super.onReset()
+
+        callbacks.reset()
+        callbackLocks.releaseAll()
     }
 
     // MARK: Listeners
 
     @objc(subscribeTextCaptureListener:)
     func subscribeTextCaptureListener(command: CDVInvokedUrlCommand) {
-        textModule.addListener()
-        emitter.registerCallback(with: .didCaptureText, call: command)
+        callbacks.textCaptureListener?.dispose(by: commandDelegate)
+        callbacks.textCaptureListener = Callback(id: command.callbackId)
         commandDelegate.send(.keepCallback, callbackId: command.callbackId)
     }
 
@@ -56,57 +62,47 @@ public class ScanditTextCapture: CDVPlugin {
 
     @objc(getDefaults:)
     func getDefaults(command: CDVInvokedUrlCommand) {
-        let defaults = [
-            "TextCapture": textModule.defaults.toEncodable()
-        ]
+        guard let settings = try? TextCaptureSettings(jsonString: "{}") else {
+            fatalError("Could not create default text capture settings, so defaults can not be created")
+        }
+
+        let textCapture = TextCapture(context: nil, settings: settings)
+        let overlay = TextCaptureOverlay(textCapture: textCapture)
+
+        let defaults = ScanditTextCaptureDefaults(textCaptureSettings: settings, overlay: overlay)
+
         commandDelegate.send(.success(message: defaults), callbackId: command.callbackId)
     }
 
     @objc(finishCallback:)
     func finishCallback(command: CDVInvokedUrlCommand) {
-        guard let result = command.defaultArgument as? [String: Any] else {
+        guard let result = TextCaptureCallbackResult.from(command) else {
             commandDelegate.send(.failure(with: .invalidJSON), callbackId: command.callbackId)
             return
         }
-        textModule.finishDidCaptureText(enabled: result["enabled"] as? Bool ?? true)
+        callbackLocks.setResult(result, for: result.finishCallbackID)
+        callbackLocks.release(for: result.finishCallbackID)
         commandDelegate.send(.success, callbackId: command.callbackId)
     }
-    
-    @objc(setModeEnabledState:)
-    func setModeEnabledState(command: CDVInvokedUrlCommand) {
-        guard let enabled = command.defaultArgument as? Bool else {
-            commandDelegate.send(.failure(with: .invalidJSON), callbackId: command.callbackId)
-            return
-        }
-        
-        textModule.setModeEnabled(enabled: enabled)
-        commandDelegate.send(.success, callbackId: command.callbackId)
+
+    func waitForFinished(_ listenerEvent: ListenerEvent, callbackId: String) {
+        callbackLocks.wait(for: listenerEvent.name, afterDoing: {
+            commandDelegate.send(.listenerCallback(listenerEvent), callbackId: callbackId)
+        })
     }
-    
-    @objc(updateTextCaptureOverlay:)
-    func updateTextCaptureOverlay(command: CDVInvokedUrlCommand) {
-        guard let overlayJson = command.defaultArgumentAsString else {
-            commandDelegate.send(.failure(with: .invalidJSON), callbackId: command.callbackId)
+
+    func finishBlockingCallback(with mode: DataCaptureMode, for listenerEvent: ListenerEvent) {
+        defer {
+            callbackLocks.clearResult(for: listenerEvent.name)
+        }
+
+        guard let result = callbackLocks.getResult(for: listenerEvent.name) as? TextCaptureCallbackResult,
+            let enabled = result.enabled else {
             return
         }
-        textModule.updateOverlay(overlayJson: overlayJson, result: CordovaResult(commandDelegate, command.callbackId))
-    }
-    
-    @objc(updateTextCaptureMode:)
-    func updateTextCaptureMode(command: CDVInvokedUrlCommand) {
-        guard let modeJson = command.defaultArgumentAsString else {
-            commandDelegate.send(.failure(with: .invalidJSON), callbackId: command.callbackId)
-            return
+
+        if enabled != mode.isEnabled {
+            mode.isEnabled = enabled
         }
-        textModule.updateModeFromJson(modeJson: modeJson, result: CordovaResult(commandDelegate, command.callbackId))
-    }
-    
-    @objc(applyTextCaptureModeSettings:)
-    func applyTextCaptureModeSettings(command: CDVInvokedUrlCommand) {
-        guard let modeSettingsJson = command.defaultArgumentAsString else {
-            commandDelegate.send(.failure(with: .invalidJSON), callbackId: command.callbackId)
-            return
-        }
-        textModule.applyModeSettings(modeSettingsJson: modeSettingsJson, result: CordovaResult(commandDelegate, command.callbackId))
     }
 }
