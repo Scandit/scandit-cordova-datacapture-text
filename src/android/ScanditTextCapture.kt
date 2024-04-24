@@ -50,6 +50,7 @@ class ScanditTextCapture :
 
     override fun onDestroy() {
         textCaptureModule.onDestroy()
+        super.onDestroy()
     }
 
     override fun pluginInitialize() {
