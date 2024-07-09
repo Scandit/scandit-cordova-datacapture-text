@@ -6,31 +6,34 @@
 
 package com.scandit.datacapture.cordova.text
 
+import android.Manifest
 import com.scandit.datacapture.cordova.core.ScanditCaptureCore
-import com.scandit.datacapture.cordova.core.errors.JsonParseError
+import com.scandit.datacapture.cordova.core.communication.CameraPermissionGrantedListener
+import com.scandit.datacapture.cordova.core.errors.InvalidActionNameError
+import com.scandit.datacapture.cordova.core.factories.ActionFactory
+import com.scandit.datacapture.cordova.core.handlers.ActionsHandler
+import com.scandit.datacapture.cordova.core.handlers.CameraPermissionsActionsHandlerHelper
 import com.scandit.datacapture.cordova.core.utils.CordovaEventEmitter
 import com.scandit.datacapture.cordova.core.utils.CordovaNoopResult
-import com.scandit.datacapture.cordova.core.utils.CordovaResult
-import com.scandit.datacapture.cordova.core.utils.CordovaResultKeepCallback
-import com.scandit.datacapture.cordova.core.utils.PluginMethod
-import com.scandit.datacapture.cordova.core.utils.defaultArgumentAsString
-import com.scandit.datacapture.cordova.core.utils.optBoolean
+import com.scandit.datacapture.cordova.text.factories.TextCaptureActionFactory
 import com.scandit.datacapture.frameworks.text.TextCaptureModule
 import com.scandit.datacapture.frameworks.text.listeners.FrameworksTextCaptureListener
 import org.apache.cordova.CallbackContext
 import org.apache.cordova.CordovaPlugin
 import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.lang.reflect.Method
 
 class ScanditTextCapture :
-    CordovaPlugin() {
+    CordovaPlugin(),
+    CameraPermissionGrantedListener {
 
     private val eventEmitter = CordovaEventEmitter()
     private val textCaptureModule = TextCaptureModule(FrameworksTextCaptureListener(eventEmitter))
 
-    private lateinit var exposedFunctionsToJs: Map<String, Method>
+    private val actionFactory: ActionFactory =
+        TextCaptureActionFactory(textCaptureModule, eventEmitter)
+    private val actionsHandler: ActionsHandler = ActionsHandler(
+        actionFactory, CameraPermissionsActionsHandlerHelper(actionFactory)
+    )
 
     private var lastTextCaptureEnabledState: Boolean = false
 
@@ -50,7 +53,6 @@ class ScanditTextCapture :
 
     override fun onDestroy() {
         textCaptureModule.onDestroy()
-        super.onDestroy()
     }
 
     override fun pluginInitialize() {
@@ -58,10 +60,9 @@ class ScanditTextCapture :
         ScanditCaptureCore.addPlugin(serviceName)
         textCaptureModule.onCreate(cordova.context)
 
-        // Init functions exposed to JS
-        exposedFunctionsToJs =
-            this.javaClass.methods.filter { it.getAnnotation(PluginMethod::class.java) != null }
-                .associateBy { it.name }
+        if (cordova.hasPermission(Manifest.permission.CAMERA)) {
+            onCameraPermissionGranted()
+        }
     }
 
     override fun execute(
@@ -69,87 +70,20 @@ class ScanditTextCapture :
         args: JSONArray,
         callbackContext: CallbackContext
     ): Boolean {
-        return if (exposedFunctionsToJs.contains(action)) {
-            exposedFunctionsToJs[action]?.invoke(this, args, callbackContext)
-            true
-        } else {
+        return try {
+            actionsHandler.addAction(action, args, callbackContext)
+        } catch (e: InvalidActionNameError) {
+            println(e)
             false
-        }
-    }
-
-    @PluginMethod
-    fun getDefaults(
-        @Suppress("UNUSED_PARAMETER") args: JSONArray,
-        callbackContext: CallbackContext
-    ) {
-        try {
-            val defaults = textCaptureModule.getDefaults()
-            val defaultsJson = JSONObject(
-                mapOf(
-                    "TextCapture" to defaults
-                )
-            )
-            callbackContext.success(defaultsJson)
         } catch (e: Exception) {
-            JsonParseError(e.message).sendResult(callbackContext)
+            println(e)
+            true
         }
     }
 
-    @PluginMethod
-    fun subscribeTextCaptureListener(
-        @Suppress("UNUSED_PARAMETER") args: JSONArray,
-        callbackContext: CallbackContext
-    ) {
-        eventEmitter.registerCallback(
-            FrameworksTextCaptureListener.ON_TEXT_CAPTURED_EVENT,
-            callbackContext
-        )
-        textCaptureModule.addListener(CordovaResultKeepCallback(callbackContext))
+    //region CameraPermissionGrantedListener
+    override fun onCameraPermissionGranted() {
+        actionsHandler.onCameraPermissionGranted()
     }
-
-    @PluginMethod
-    fun finishCallback(args: JSONArray, callbackContext: CallbackContext) {
-        try {
-            textCaptureModule.finishDidCapture(
-                args.optBoolean("enabled", true),
-                CordovaResult(callbackContext)
-            )
-        } catch (e: JSONException) {
-            JsonParseError(e.message).sendResult(callbackContext)
-        } catch (e: RuntimeException) { // TODO [SDC-1851] - fine-catch deserializer exceptions
-            JsonParseError(e.message).sendResult(callbackContext)
-        }
-    }
-
-    @PluginMethod
-    fun updateTextCaptureMode(args: JSONArray, callbackContext: CallbackContext) {
-        textCaptureModule.updateModeFromJson(
-            args.defaultArgumentAsString,
-            CordovaResult(callbackContext)
-        )
-    }
-
-    @PluginMethod
-    fun applyTextCaptureModeSettings(args: JSONArray, callbackContext: CallbackContext) {
-        textCaptureModule.applyModeSettings(
-            args.defaultArgumentAsString,
-            CordovaResult(callbackContext)
-        )
-    }
-
-    @PluginMethod
-    fun updateTextCaptureOverlay(args: JSONArray, callbackContext: CallbackContext) {
-        textCaptureModule.updateOverlay(
-            args.defaultArgumentAsString,
-            CordovaResult(callbackContext)
-        )
-    }
-
-    @PluginMethod
-    fun setModeEnabledState(args: JSONArray, callbackContext: CallbackContext) {
-        textCaptureModule.setModeEnabled(
-            args[0] as? Boolean ?: true,
-            CordovaResult(callbackContext)
-        )
-    }
+    //endregion
 }
