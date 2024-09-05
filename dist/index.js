@@ -50,14 +50,24 @@ var CordovaFunction;
     CordovaFunction["FinishCallback"] = "finishCallback";
 })(CordovaFunction || (CordovaFunction = {}));
 
+/**
+ * @deprecated Text Capture mode is deprecated.
+ */
 class CapturedText {
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get value() {
         return this._value;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get location() {
         return this._location;
     }
     static fromJSON(json) {
+        console.warn('Text Capture mode is deprecated.');
         const text = new CapturedText();
         text._value = json.value;
         text._location = scanditDatacaptureFrameworksCore.Quadrilateral.fromJSON(json.location);
@@ -94,10 +104,19 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
+/**
+ * @deprecated Text Capture mode is deprecated.
+ */
 class TextCaptureSession {
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get newlyCapturedTexts() {
         return this._newlyCapturedTexts;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get frameSequenceID() {
         return this._frameSequenceID;
     }
@@ -109,43 +128,84 @@ class TextCaptureSession {
         return session;
     }
 }
+/**
+ * @deprecated Text Capture mode is deprecated.
+ */
 class TextCaptureFeedback extends scanditDatacaptureFrameworksCore.DefaultSerializeable {
     constructor() {
         super(...arguments);
+        /**
+         * @deprecated Text Capture mode is deprecated.
+         */
         this.success = scanditDatacaptureFrameworksCore.Feedback.defaultFeedback;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     static get default() {
+        console.warn('Text Capture mode is deprecated.');
         return new TextCaptureFeedback();
     }
 }
+/**
+ * @deprecated Text Capture mode is deprecated.
+ */
 class TextCaptureOverlay extends scanditDatacaptureFrameworksCore.DefaultSerializeable {
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     static get defaultBrush() {
+        console.warn('Text Capture mode is deprecated.');
         return new scanditDatacaptureFrameworksCore.Brush(Cordova.defaults.TextCapture.TextCaptureOverlay.DefaultBrush.fillColor, Cordova.defaults.TextCapture.TextCaptureOverlay.DefaultBrush.strokeColor, Cordova.defaults.TextCapture.TextCaptureOverlay.DefaultBrush.strokeWidth);
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get brush() {
         return this._brush;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     set brush(newBrush) {
         this._brush = newBrush;
         this.textCapture.listenerProxy.updateTextCaptureOverlay(this);
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get viewfinder() {
         return this._viewfinder;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     set viewfinder(newViewfinder) {
         this._viewfinder = newViewfinder;
         this.textCapture.listenerProxy.updateTextCaptureOverlay(this);
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get shouldShowScanAreaGuides() {
         return this._shouldShowScanAreaGuides;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     set shouldShowScanAreaGuides(shouldShow) {
         this._shouldShowScanAreaGuides = shouldShow;
         this.textCapture.listenerProxy.updateTextCaptureOverlay(this);
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     static withTextCapture(textCapture) {
         return TextCaptureOverlay.withTextCaptureForView(textCapture, null);
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     static withTextCaptureForView(textCapture, view) {
         const overlay = new TextCaptureOverlay();
         overlay.textCapture = textCapture;
@@ -160,6 +220,7 @@ class TextCaptureOverlay extends scanditDatacaptureFrameworksCore.DefaultSeriali
         this._shouldShowScanAreaGuides = false;
         this._viewfinder = null;
         this._brush = TextCaptureOverlay.defaultBrush;
+        console.warn('Text Capture mode is deprecated.');
     }
 }
 __decorate([
@@ -249,6 +310,9 @@ class TextCaptureListenerProxy {
 }
 TextCaptureListenerProxy.cordovaExec = Cordova.exec;
 
+/**
+ * @deprecated Text Capture mode is deprecated.
+ */
 class TextCapture extends scanditDatacaptureFrameworksCore.DefaultSerializeable {
     constructor() {
         super(...arguments);
@@ -259,28 +323,50 @@ class TextCapture extends scanditDatacaptureFrameworksCore.DefaultSerializeable 
         this.listeners = [];
         this.isInListenerCallback = false;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get isEnabled() {
         return this._isEnabled;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     set isEnabled(isEnabled) {
         var _a;
         this._isEnabled = isEnabled;
         (_a = this.listenerProxy) === null || _a === void 0 ? void 0 : _a.setModeEnabledState(isEnabled);
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get context() {
         return this._context;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     static get recommendedCameraSettings() {
         return new scanditDatacaptureFrameworksCore.CameraSettings(Cordova.defaults.TextCapture.RecommendedCameraSettings);
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     get feedback() {
         return this._feedback;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     set feedback(feedback) {
         this._feedback = feedback;
         this.listenerProxy.updateTextCaptureMode();
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     static forContext(context, settings) {
+        console.warn('Text Capture mode is deprecated.');
         const textCapture = new TextCapture();
         textCapture.settings = settings;
         if (context) {
@@ -289,16 +375,25 @@ class TextCapture extends scanditDatacaptureFrameworksCore.DefaultSerializeable 
         textCapture.listenerProxy = TextCaptureListenerProxy.forTextCapture(textCapture);
         return textCapture;
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     applySettings(settings) {
         this.settings = settings;
         return this.listenerProxy.applyTextCaptureModeSettings(settings);
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     addListener(listener) {
         if (this.listeners.includes(listener)) {
             return;
         }
         this.listeners.push(listener);
     }
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     removeListener(listener) {
         if (!this.listeners.includes(listener)) {
             return;
@@ -325,7 +420,13 @@ __decorate([
     scanditDatacaptureFrameworksCore.ignoreFromSerialization
 ], TextCapture.prototype, "isInListenerCallback", void 0);
 
+/**
+ * @deprecated Text Capture mode is deprecated.
+ */
 class TextCaptureSettings extends scanditDatacaptureFrameworksCore.DefaultSerializeable {
+    /**
+     * @deprecated Text Capture mode is deprecated.
+     */
     static fromJSON(json) {
         const settings = new TextCaptureSettings();
         Object.keys(json).forEach(key => {
@@ -335,9 +436,19 @@ class TextCaptureSettings extends scanditDatacaptureFrameworksCore.DefaultSerial
     }
     constructor() {
         super();
+        /**
+         * @deprecated Text Capture mode is deprecated.
+         */
         this.duplicateFilter = Cordova.defaults.TextCapture.TextCaptureSettings.duplicateFilter;
+        /**
+         * @deprecated Text Capture mode is deprecated.
+         */
         this.locationSelection = null;
+        /**
+         * @deprecated Text Capture mode is deprecated.
+         */
         this.recognitionDirection = Cordova.defaults.TextCapture.TextCaptureSettings.recognitionDirection;
+        console.warn('Text Capture mode is deprecated.');
     }
 }
 __decorate([
